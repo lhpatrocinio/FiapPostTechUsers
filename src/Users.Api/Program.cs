@@ -1,0 +1,74 @@
+﻿using Asp.Versioning.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
+using Users.Api.Extensions.Auth.Middleware;
+using Users.Api.Extensions.Auth;
+using Users.Api.Extensions.Logs.Extension;
+using Users.Api.Extensions.Logs;
+using Users.Api.Extensions.Migration;
+using Users.Api.Extensions.Swagger.Extension;
+using Users.Api.Extensions.Swagger.Middleware;
+using Users.Api.Extensions.Versioning.Extension;
+using Users.Application.Mappers;
+using Users.Application;
+using Users.Infrastructure.DataBase.EntityFramework.Context;
+using Users.Infrastructure;
+using Users.Infrastructure.DataBase.EntityFramework.Identity.Extension;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddSerilogConfiguration();
+builder.WebHost.UseUrls("http://*:80");
+
+builder.Services.AddMvcCore(options => options.AddLogRequestFilter());
+builder.Services.AddVersioning();
+builder.Services.AddSwaggerDocumentation();
+builder.Services.AddAutoMapper(typeof(MapperProfile));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddIdentityExtension();
+builder.Services.AddAuthorizationExtension(builder.Configuration);
+
+// Adiciona configuração CORS para permitir solicitações do Prometheus
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+//// Adiciona monitoramento com Prometheus
+//builder.Services.AddPrometheusMonitoring();
+//builder.Services.AddMetricsCollector();
+
+
+#region [DI]]
+
+ApplicationBootstrapper.Register(builder.Services);
+InfraBootstrapper.Register(builder.Services);
+
+#endregion
+
+var app = builder.Build();
+
+app.ExecuteMigrations();
+var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+app.UseAuthentication();                        // 1�: popula HttpContext.User
+app.UseMiddleware<RoleAuthorizationMiddleware>(); // 2�: seu middleware
+app.UseCorrelationId();
+
+// Adiciona CORS antes de outros middlewares
+app.UseCors("AllowAll");
+
+//// Adiciona middleware de monitoramento
+//app.UsePrometheusMonitoring();
+//app.UseMetricsMiddleware();
+
+app.UseVersionedSwagger(apiVersionDescriptionProvider);
+app.UseAuthorization();                         // 3�: aplica [Authorize]
+app.UseHttpsRedirection();
+app.MapControllers();
+app.Run();
