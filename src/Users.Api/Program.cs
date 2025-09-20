@@ -69,6 +69,5 @@ app.UseCors("AllowAll");
 
 app.UseVersionedSwagger(apiVersionDescriptionProvider);
 app.UseAuthorization();                         // 3�: aplica [Authorize]
-app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
