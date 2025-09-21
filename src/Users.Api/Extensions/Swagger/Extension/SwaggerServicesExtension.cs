@@ -27,7 +27,7 @@ namespace Users.Api.Extensions.Swagger.Extension
                 {
                     options.SwaggerDoc(description.GroupName, new OpenApiInfo()
                     {
-                        Title = $"API - {description.GroupName.ToUpper()}",
+                        Title = $"API USERS - {description.GroupName.ToUpper()}",
                         Version = description.ApiVersion.ToString(),
                         Description = "Documentação gerada automaticamente com Swagger e ApiVersioning."
                     });
