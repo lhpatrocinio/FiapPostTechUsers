@@ -22,16 +22,16 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restaurar pacotes
-        run: dotnet restore FiapPostTechUsers/src/Users.Api/Users.Api.csproj
+        run: dotnet restore src/Users.Api/Users.Api.csproj
 
       - name: Verificar formatação do código
-        run: dotnet format FiapPostTechUsers/FiapPostTechUsers.sln --verify-no-changes --severity warn --verbosity diag
+        run: dotnet format FiapPostTechUsers.sln --verify-no-changes --severity warn --verbosity diag
 
       - name: Compilar projeto
-        run: dotnet build FiapPostTechUsers/src/Users.Api/Users.Api.csproj --configuration Release --no-restore
+        run: dotnet build src/Users.Api/Users.Api.csproj --configuration Release --no-restore
 
       - name: Executar testes com cobertura
-        run: dotnet test FiapPostTechUsers/tests/Users.Test/Users.Test.csproj --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults
+        run: dotnet test tests/Users.Test/Users.Test.csproj --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults
 
       - name: Publicar cobertura com Coverlet (opcional)
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.0
