@@ -4,7 +4,7 @@ namespace Users.Application.Repository
 {
     public interface IUserRepository
     {
-        Task CreateAsync(UsersEntitie entity, string password);
+        Task<Guid> CreateAsync(UsersEntitie entity, string password);
         void Update(UsersEntitie entity);
         Task DeleteAsync(UsersEntitie entity);
         Task BlockUserAsync(UsersEntitie user, bool enableBlocking);

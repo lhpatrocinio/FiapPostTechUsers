@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Threading.Tasks;
 using Users.Application.Common;
 using Users.Application.Dtos.Requests;
 using Users.Application.Dtos.Response;
+using Users.Application.Events;
 using Users.Application.Repository;
 using Users.Application.Services.Interfaces;
 using Users.Application.Validations.User;
@@ -16,10 +14,12 @@ namespace Users.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public UserServices(IUserRepository userRepository, IMapper mapper)
+        private readonly IUserCreatedEventHandler _userCreatedEventHandler;
+        public UserServices(IUserRepository userRepository, IMapper mapper, IUserCreatedEventHandler userCreatedEventHandler)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _userCreatedEventHandler = userCreatedEventHandler ?? throw new ArgumentNullException(nameof(userCreatedEventHandler));
         }
 
         public async Task BlockUserAsync(BlockUserRequest request)
@@ -43,7 +43,15 @@ namespace Users.Application.Services
         public async Task CreateAsync(CreateUserRequest request)
         {
             var persistence = _mapper.Map<UsersEntitie>(request);
-            await _userRepository.CreateAsync(persistence, request.Password);
+            var userId = await _userRepository.CreateAsync(persistence, request.Password);
+
+            //Publica evento
+            _userCreatedEventHandler.PublishUserCreatedEvent(new Domain.Events.UserCreatedEvent()
+            {
+                Id = userId,
+                Email = request.Email,
+                Name = request.NickName
+            });
         }
 
         public async Task DeleteAsync(DeleteUserRequest request)

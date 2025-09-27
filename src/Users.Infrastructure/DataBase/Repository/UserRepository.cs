@@ -18,7 +18,7 @@ namespace Users.Infrastructure.DataBase.Repository
             _context = context;
         }
 
-        public async Task CreateAsync(UsersEntitie entity, string password)
+        public async Task<Guid> CreateAsync(UsersEntitie entity, string password)
         {
             var result = await _userManager.CreateAsync(entity, password);
             if (result.Succeeded is false)
@@ -36,6 +36,8 @@ namespace Users.Infrastructure.DataBase.Repository
             });
 
             _context.SaveChanges();
+
+            return entity.Id;
         }
 
         public async Task<bool> CheckPasswordAsync(UsersEntitie user, string password)
