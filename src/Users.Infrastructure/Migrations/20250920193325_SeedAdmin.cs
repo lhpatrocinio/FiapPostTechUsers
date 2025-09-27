@@ -18,6 +18,12 @@ namespace Users.Infrastructure.Migrations
                   
                   INSERT [dbo].[UAC_UserRoles] ([RoleId], [UserId] )
                   VALUES (N'8947bbc5-010c-4df8-93f3-35c42cddca40', N'991986d7-6621-4645-b3f3-1f3a7e444e13')
+
+                  INSERT [dbo].[UAC_UserRoles] ([RoleId], [UserId] )
+                  VALUES (N'574f0964-e04f-4e3d-9788-108e90664955', N'991986d7-6621-4645-b3f3-1f3a7e444e13')
+
+                  INSERT [dbo].[UAC_UserRoles] ([RoleId], [UserId] )
+                  VALUES (N'a17d36de-fdd7-4a58-8c90-cf679d4f1805', N'991986d7-6621-4645-b3f3-1f3a7e444e13')
                 ");
         }
 

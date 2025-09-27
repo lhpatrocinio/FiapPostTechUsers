@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driver", "Driver", "{719CA1
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Test", "tests\Users.Test\Users.Test.csproj", "{7F63B1B7-4BBD-415F-805C-BDFDFC15C072}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F63B1B7-4BBD-415F-805C-BDFDFC15C072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F63B1B7-4BBD-415F-805C-BDFDFC15C072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F63B1B7-4BBD-415F-805C-BDFDFC15C072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F63B1B7-4BBD-415F-805C-BDFDFC15C072}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{8608AC8B-2285-4936-9298-5A1180B321FF} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{A9ED9407-5E83-43C8-880C-DAC1FA6587BD} = {2AB7A086-66EB-42AA-B2BC-91E456844F2F}
 		{719CA104-24A2-458D-8EF7-96059B968ECC} = {2AB7A086-66EB-42AA-B2BC-91E456844F2F}
+		{7F63B1B7-4BBD-415F-805C-BDFDFC15C072} = {5E0D739E-3E5D-470C-BCFD-08AB89E77D80}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F824118A-B7F3-4754-B075-6007F2043CCC}

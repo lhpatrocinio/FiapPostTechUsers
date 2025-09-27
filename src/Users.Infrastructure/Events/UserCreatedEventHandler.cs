@@ -6,7 +6,7 @@ using Users.Domain.Events;
 
 namespace Users.Infrastructure.Events
 {
-    public class UserCreatedEventHandler: IUserCreatedEventHandler
+    public class UserCreatedEventHandler : IUserCreatedEventHandler
     {
         public void PublishUserCreatedEvent(UserCreatedEvent user)
         {
@@ -38,6 +38,6 @@ namespace Users.Infrastructure.Events
                 body: body);
         }
 
-    
+
     }
 }

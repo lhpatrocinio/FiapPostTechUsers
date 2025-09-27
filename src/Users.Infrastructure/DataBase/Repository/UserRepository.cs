@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using Users.Application.Repository;
 using Users.Domain.Entities.Identity;
 using Users.Infrastructure.Common;
@@ -27,13 +28,17 @@ namespace Users.Infrastructure.DataBase.Repository
                 throw new Exception(messages);
             }
 
-            var role = await _context.Roles.FirstOrDefaultAsync(role => role.Name.Equals("Usuario"));
+            var permissoes = new List<string>() { "Usuario", "Games", "Payments" };
+            var roles = await _context.Roles.Where(role => permissoes.Contains(role.Name)).ToListAsync();
 
-            _context.UserRoles.Add(new UserRoles()
+            foreach (var role in roles)
             {
-                UserId = entity.Id,
-                RoleId = role.Id
-            });
+                _context.UserRoles.Add(new UserRoles()
+                {
+                    UserId = entity.Id,
+                    RoleId = role.Id
+                });
+            }
 
             _context.SaveChanges();
 
