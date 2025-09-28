@@ -38,7 +38,7 @@ jobs:
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Aplicar scripts de migração
-        run: dotnet ef database update --project src/Users.Api/Users.Api.csproj
+        run: dotnet ef database update --project src/Users.Infrastructure/Users.Infrastructure.csproj --startup-project src/Users.Api/Users.Api.csproj
         env:
           ConnectionStrings__DefaultConnection: ${{ secrets.CONNECTION_STRING }}
           
