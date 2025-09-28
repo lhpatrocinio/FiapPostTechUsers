@@ -1,0 +1,49 @@
+name: Trigger auto deployment for aca-usersapi
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/aca-usersapi-AutoDeployTrigger-43467dce-b1cc-475e-acab-f213d2562107.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ACAUSERSAPI_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.ACAUSERSAPI_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.ACAUSERSAPI_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}
+          _dockerfilePathKey_: _dockerfilePath_
+          _targetLabelKey_: _targetLabel_
+          registryUrl: acrinfiniteloops.azurecr.io
+          registryUsername: ${{ secrets.ACAUSERSAPI_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.ACAUSERSAPI_REGISTRY_PASSWORD }}
+          containerAppName: aca-usersapi
+          resourceGroup: PosFiap
+          imageToBuild: acrinfiniteloops.azurecr.io/aca-usersapi:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
