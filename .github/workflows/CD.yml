@@ -47,7 +47,8 @@ jobs:
         with:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}       
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}   
+          auth-type: 'oidc'
           
       - name: Login no Azure Container Registry (ACR)
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login acrinfiniteloops.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
