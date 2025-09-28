@@ -53,7 +53,7 @@ jobs:
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login acrinfiniteloops.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
         
       - name: Build da imagem
-        run: docker build -t acrinfiniteloops.azurecr.io/fiap.post.tech.users:latest -f src/Users.Api/Dockerfile FiapPostTechUsers
+        run: docker build -t acrinfiniteloops.azurecr.io/fiap.post.tech.users:latest -f src/Users.Api/Dockerfile .
 
       - name: Push da imagem
         run: docker push acrinfiniteloops.azurecr.io/fiap.post.tech.users:latest    
