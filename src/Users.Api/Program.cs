@@ -1,8 +1,10 @@
 ﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Users.Api.Extensions.Auth.Middleware;
 using Users.Api.Extensions.Auth;
 using Users.Api.Extensions.Logs.Extension;
+using Users.Api.Extensions.Logs.ELK;
 using Users.Api.Extensions.Logs;
 using Users.Api.Extensions.Migration;
 using Users.Api.Extensions.Swagger.Extension;
@@ -13,6 +15,7 @@ using Users.Application;
 using Users.Infrastructure.DataBase.EntityFramework.Context;
 using Users.Infrastructure;
 using Users.Infrastructure.DataBase.EntityFramework.Identity.Extension;
+using Users.Infrastructure.Monitoring;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,12 +42,14 @@ builder.Services.AddCors(options =>
     });
 });
 
-//// Adiciona monitoramento com Prometheus
-//builder.Services.AddPrometheusMonitoring();
-//builder.Services.AddMetricsCollector();
+// Adiciona monitoramento com Prometheus
+builder.Services.AddPrometheusMonitoring();
+builder.Services.AddSingleton<MetricsCollector>();
 
+// ELK Stack integration
+builder.Services.AddELKIntegration(builder.Configuration);
 
-#region [DI]]
+#region [DI]
 
 ApplicationBootstrapper.Register(builder.Services);
 InfraBootstrapper.Register(builder.Services);
@@ -53,21 +58,28 @@ InfraBootstrapper.Register(builder.Services);
 
 var app = builder.Build();
 
+// Log manual para teste
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("🚀 Users API iniciada - Teste de log manual com metadados");
+
 app.ExecuteMigrations();
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-app.UseAuthentication();                        // 1�: popula HttpContext.User
-app.UseMiddleware<RoleAuthorizationMiddleware>(); // 2�: seu middleware
+app.UseAuthentication();                        // 1°: popula HttpContext.User
+app.UseMiddleware<RoleAuthorizationMiddleware>(); // 2°: seu middleware
 app.UseCorrelationId();
+app.UseELKIntegration();
 
 // Adiciona CORS antes de outros middlewares
 app.UseCors("AllowAll");
 
-//// Adiciona middleware de monitoramento
-//app.UsePrometheusMonitoring();
-//app.UseMetricsMiddleware();
+// Adiciona middleware de monitoramento
+app.UsePrometheusMonitoring();
+
+// Adiciona request logging com Serilog
+app.UseSerilogRequestLogging();
 
 app.UseVersionedSwagger(apiVersionDescriptionProvider);
-app.UseAuthorization();                         // 3�: aplica [Authorize]
+app.UseAuthorization();                         // 3°: aplica [Authorize]
 app.MapControllers();
 app.Run();
