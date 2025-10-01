@@ -9,6 +9,7 @@ using Users.Api.Extensions.Logs;
 using Users.Api.Extensions.Migration;
 using Users.Api.Extensions.Swagger.Extension;
 using Users.Api.Extensions.Swagger.Middleware;
+using Users.Api.Extensions.Tracing;
 using Users.Api.Extensions.Versioning.Extension;
 using Users.Application.Mappers;
 using Users.Application;
@@ -48,6 +49,9 @@ builder.Services.AddSingleton<MetricsCollector>();
 
 // ELK Stack integration
 builder.Services.AddELKIntegration(builder.Configuration);
+
+// Distributed Tracing with OpenTelemetry + Jaeger
+builder.Services.AddDistributedTracing(builder.Configuration);
 
 #region [DI]
 
