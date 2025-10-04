@@ -53,10 +53,10 @@ namespace Users.Api.Extensions.Tracing
                         })
                         .AddHttpClientInstrumentation()
                         .AddEntityFrameworkCoreInstrumentation()
-                        .AddJaegerExporter(options =>
+                        .AddOtlpExporter(options =>
                         {
-                            var jaegerEndpoint = configuration["OpenTelemetry:Jaeger:Endpoint"] ?? "http://jaeger:14268/api/traces";
-                            options.Endpoint = new Uri(jaegerEndpoint);
+                            var otlpEndpoint = configuration["OpenTelemetry:Otlp:Endpoint"] ?? "http://jaeger:4317";
+                            options.Endpoint = new Uri(otlpEndpoint);
                         });
                 });
 

@@ -20,6 +20,14 @@ namespace Users.Api.Extensions.Auth.Middleware
 
             if (endpoint != null)
             {
+                // Verificar se tem AllowAnonymous primeiro
+                var allowAnonymousAttribute = endpoint.Metadata.GetMetadata<AllowAnonymousAttribute>();
+                if (allowAnonymousAttribute != null)
+                {
+                    await _next(context);
+                    return;
+                }
+
                 var authorizeAttribute = endpoint.Metadata.GetMetadata<AuthorizeAttribute>();
 
                 if (authorizeAttribute != null)
