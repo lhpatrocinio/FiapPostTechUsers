@@ -12,7 +12,6 @@ namespace Users.Api.Controllers.V1
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    [AllowAnonymous]
     public class UserController : ControllerBase
     {
         private readonly IUserServices _userServices;
