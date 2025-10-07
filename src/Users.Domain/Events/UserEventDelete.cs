@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Users.Domain.Events
 {
-    public class UserCreatedEvent
+    public class UserEventDelete: UserEvent
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
     }
 }

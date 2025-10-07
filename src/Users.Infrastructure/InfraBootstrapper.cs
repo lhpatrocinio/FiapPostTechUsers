@@ -13,6 +13,7 @@ namespace Users.Infrastructure
             services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<IUserCreatedEventHandler, UserCreatedEventHandler>();
+            services.AddTransient<IUserEventRepository, UserEventRepository>();
         }
     }
 }

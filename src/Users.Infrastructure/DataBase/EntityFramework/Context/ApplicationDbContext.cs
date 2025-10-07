@@ -40,6 +40,7 @@ namespace Users.Infrastructure.DataBase.EntityFramework.Context
 
             builder.ApplyConfiguration(new AddressConfiguration());
             builder.ApplyConfiguration(new ContactConfiguration());
+            builder.ApplyConfiguration(new UserEventConfiguration());
         }
     }
 }

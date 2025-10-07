@@ -9,6 +9,6 @@ namespace Users.Application.Events
 {
     public interface IUserCreatedEventHandler
     {
-        void PublishUserCreatedEvent(UserCreatedEvent user);
+        void PublishUserCreatedEvent(UserEvent user);
     }
 }

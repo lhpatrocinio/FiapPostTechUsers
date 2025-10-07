@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Users.Infrastructure.DataBase.EntityFramework.Context;
 
@@ -11,9 +12,11 @@ using Users.Infrastructure.DataBase.EntityFramework.Context;
 namespace Users.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251006202917_adicionadoEntidade")]
+    partial class adicionadoEntidade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,6 +367,9 @@ namespace Users.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("UAC_Event_User", (string)null);
                 });
 
@@ -444,6 +450,17 @@ namespace Users.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Users.Domain.Entities.UserEvent", b =>
+                {
+                    b.HasOne("Users.Domain.Entities.Identity.UsersEntitie", "User")
+                        .WithOne("UserEvent")
+                        .HasForeignKey("Users.Domain.Entities.UserEvent", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Users.Domain.Entities.Identity.Roles", b =>
                 {
                     b.Navigation("UserRoles");
@@ -455,6 +472,9 @@ namespace Users.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Contact")
+                        .IsRequired();
+
+                    b.Navigation("UserEvent")
                         .IsRequired();
 
                     b.Navigation("UserRoles");
