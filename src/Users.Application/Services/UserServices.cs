@@ -48,15 +48,6 @@ namespace Users.Application.Services
             if (request.EnableBlocking is false)
                 eventType = Domain.Entities.EventUser.active;
 
-            //Publica evento
-            _userCreatedEventHandler.PublishUserCreatedEvent(new Domain.Events.UserEvent()
-            {
-                Id = data.Id,
-                Email = data.Email,
-                Name = data.NickName,
-                EventType = eventType
-            });
-
             //salva o evento na base
             await _userEventRepository.AddEvent(
                 new Domain.Entities.UserEvent()
@@ -168,5 +159,13 @@ namespace Users.Application.Services
             var data = await _userRepository.GetByNicknameAsync(request.NickName);
             return _mapper.Map<UserResponse>(data);
         }
+
+        public async Task<List<UserResponse>> ListUsersNoTwoFactor()
+        {
+            var data = await _userRepository.ListUsersNoTwoFactor();
+            List<UserResponse> result = _mapper.Map<List<UserResponse>>(data);
+            return result;
+        }
+
     }
 }

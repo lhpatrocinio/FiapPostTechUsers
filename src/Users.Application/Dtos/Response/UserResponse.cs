@@ -12,5 +12,6 @@
         public string NickName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
+        public bool TwoFactorEnabled { get; set; }
     }
 }

@@ -56,5 +56,17 @@ namespace Users.Api.Controllers.V1
             return Ok(result);
         }
 
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(UserResponse))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [AllowAnonymous]
+        [HttpGet("ListUsersNoTwoFactor")]
+        public async Task<IActionResult> ListUsersNoTwoFactor(CancellationToken cancellationToken = default)
+        {
+            var result = await _userServices.ListUsersNoTwoFactor();
+            return Ok(result);
+        }
+
     }
 }

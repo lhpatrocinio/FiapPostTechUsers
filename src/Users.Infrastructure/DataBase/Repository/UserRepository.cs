@@ -75,9 +75,9 @@ namespace Users.Infrastructure.DataBase.Repository
             }
         }
 
-        public Task<IEnumerable<UsersEntitie>> GetAllAsync()
+        public async Task<IEnumerable<UsersEntitie>> ListUsersNoTwoFactor()
         {
-            throw new System.NotImplementedException();
+            return await _context.Users.Where(x => x.TwoFactorEnabled == false).ToListAsync();
         }
 
         public async Task<UsersEntitie> GetByEmailAsync(string email)

@@ -20,7 +20,8 @@ namespace Users.Application.Mappers
                 .ForMember(destination => destination.NickName, options => options.MapFrom(source => source.NickName))
                 .ForMember(destination => destination.CreatedAt, options => options.MapFrom(source => source.CreatedAt))
                 .ForMember(destination => destination.CreatedAt, options => options.MapFrom(source => source.CreatedAt))
-                .ForMember(destination => destination.UpdateAt, options => options.MapFrom(source => source.UpdateAt));
+                .ForMember(destination => destination.UpdateAt, options => options.MapFrom(source => source.UpdateAt))
+                .ForMember(destination => destination.TwoFactorEnabled, options => options.MapFrom(source => source.TwoFactorEnabled));
 
 
             CreateMap<CreateUserRequest, UsersEntitie>()

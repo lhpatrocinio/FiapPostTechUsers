@@ -11,6 +11,7 @@ namespace Users.Application.Services.Interfaces
         Task<UserResponse> GetByIdAsync(GetUserByIdRequest request);
         Task DeleteAsync(DeleteUserRequest request);
         Task BlockUserAsync(BlockUserRequest request);
+        Task<List<UserResponse>> ListUsersNoTwoFactor();
 
     }
 }
