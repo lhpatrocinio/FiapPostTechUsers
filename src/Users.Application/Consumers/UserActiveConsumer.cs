@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Users.Application.Dtos.Requests;
+using Users.Application.Rabbit;
 using Users.Application.Services.Interfaces;
 
 namespace Users.Api.Consumers
@@ -13,24 +14,16 @@ namespace Users.Api.Consumers
     public class UserActiveConsumer : BackgroundService
     {
         private readonly ILogger<UserActiveConsumer> _logger;
-        private IConnection _connection;
-        private IModel _channel;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly RabbitMqSetup _setup;
+        private readonly IModel _channel;
+        private const int MaxRetries = 3;
 
-        public UserActiveConsumer(ILogger<UserActiveConsumer> logger, IServiceScopeFactory serviceScopeFactory)
+        public UserActiveConsumer(ILogger<UserActiveConsumer> logger, IServiceScopeFactory serviceScopeFactory, RabbitMqSetup setup)
         {
             _logger = logger;
-
-            var factory = new ConnectionFactory() { HostName = "rabbitmq" }; // ou nome do container no docker-compose
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
-
-            _channel.QueueDeclare(
-                queue: "active-queue",
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
+            _setup = setup;
+            _channel = _setup.CreateChannel("user_active");
             _serviceScopeFactory = serviceScopeFactory;
         }
 
@@ -46,29 +39,83 @@ namespace Users.Api.Consumers
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                var userEvent = JsonSerializer.Deserialize<UserActiveEvent>(message);
+                try
+                {
+                    var userEvent = JsonSerializer.Deserialize<UserActiveEvent>(message);
 
-                _logger.LogInformation($"[GamesApi] Novo usuário detectado: {userEvent?.Name} - {userEvent?.Email}");
+                    _logger.LogInformation($"[GamesApi] Novo usuário detectado: {userEvent?.Name} - {userEvent?.Email}");
 
-                await userServices.BlockUserAsync(
-                    new BlockUserRequest()
+                    await userServices.BlockUserAsync(
+                        new BlockUserRequest()
+                        {
+                            Id = userEvent.UserId,
+                            EnableBlocking = false
+                        });
+                }
+                catch (Exception ex)
+                {
+                    int retryCount = GetRetryCount(ea.BasicProperties);
+
+                    if (retryCount >= MaxRetries)
                     {
-                        Id = userEvent.UserId,
-                        EnableBlocking = false
-                    });
-
+                        _logger.LogInformation($"Enviando para DLQ após {retryCount} tentativas");
+                        SendToDlq(ea.Body.ToArray());
+                        _channel.BasicAck(ea.DeliveryTag, false);
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"Retry {retryCount + 1} de {MaxRetries}");
+                        SendToRetryQueue(ea.Body.ToArray(), retryCount + 1);
+                        _channel.BasicAck(ea.DeliveryTag, false);
+                    }
+                }
             };
 
-            _channel.BasicConsume("active-queue", false, consumer);
-
+            _channel.BasicConsume("user_active-queue", false, consumer);
             return Task.CompletedTask;
         }
 
         public override void Dispose()
         {
             _channel.Close();
-            _connection.Close();
             base.Dispose();
+        }
+
+        private int GetRetryCount(IBasicProperties props)
+        {
+            if (props.Headers != null && props.Headers.TryGetValue("x-retry-count", out var value))
+            {
+                return int.Parse(Encoding.UTF8.GetString((byte[])value));
+            }
+            return 0;
+        }
+
+        private void SendToRetryQueue(byte[] body, int retryCount)
+        {
+            var props = _channel.CreateBasicProperties();
+            props.Persistent = true;
+            props.Headers = new Dictionary<string, object>
+            {
+                { "x-retry-count", Encoding.UTF8.GetBytes(retryCount.ToString()) }
+            };
+
+            _channel.BasicPublish(
+                exchange: "",
+                routingKey: "user_create_queue",
+                basicProperties: props,
+                body: body);
+        }
+
+        private void SendToDlq(byte[] body)
+        {
+            var props = _channel.CreateBasicProperties();
+            props.Persistent = true;
+
+            _channel.BasicPublish(
+                exchange: "",
+                routingKey: "user_create_dlq",
+                basicProperties: props,
+                body: body);
         }
     }
 

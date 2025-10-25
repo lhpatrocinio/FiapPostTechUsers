@@ -16,7 +16,7 @@ namespace Users.Infrastructure.Events
 
             var eventDescription = user.EventType.ToString();
             channel.QueueDeclare(
-                queue: $"{eventDescription}-queue",
+                queue: $"user_{eventDescription}_queue",
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -33,8 +33,8 @@ namespace Users.Infrastructure.Events
             var body = Encoding.UTF8.GetBytes(message);
 
             channel.BasicPublish(
-                exchange: "",
-                routingKey: $"{eventDescription}-queue",
+                exchange: $"user_{eventDescription}_exchange",
+                routingKey: $"user_{eventDescription}_queue",
                 basicProperties: null,
                 body: body);
         }
