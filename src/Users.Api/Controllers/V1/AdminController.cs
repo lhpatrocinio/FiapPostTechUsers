@@ -24,7 +24,7 @@ namespace Users.Api.Controllers.V1
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPatch("User/Block")]
         public async Task<IActionResult> BlockUser([FromBody] BlockUserRequest request, CancellationToken cancellationToken = default)
         {

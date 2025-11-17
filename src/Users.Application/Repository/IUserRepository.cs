@@ -15,5 +15,6 @@ namespace Users.Application.Repository
         Task<IList<string>> GetRolesUser(UsersEntitie user);
         Task AccessFailedAsync(UsersEntitie user);
         Task<bool> CheckLockedOutAsync(UsersEntitie user);
+        Task<IEnumerable<UsersEntitie>> ListUsersNoTwoFactor();
     }
 }

@@ -75,9 +75,9 @@ namespace Users.Infrastructure.DataBase.Repository
             }
         }
 
-        public Task<IEnumerable<UsersEntitie>> GetAllAsync()
+        public async Task<IEnumerable<UsersEntitie>> ListUsersNoTwoFactor()
         {
-            throw new System.NotImplementedException();
+            return await _context.Users.Where(x => x.TwoFactorEnabled == false).ToListAsync();
         }
 
         public async Task<UsersEntitie> GetByEmailAsync(string email)
@@ -108,7 +108,7 @@ namespace Users.Infrastructure.DataBase.Repository
         {
             if (enableBlocking)
             {
-                var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddMinutes(10));
+                var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddMonths(1));
                 if (result.Succeeded is false)
                 {
                     var messages = string.Concat("Message is invalid, validation errors: ", result.Errors.ConvertToString());

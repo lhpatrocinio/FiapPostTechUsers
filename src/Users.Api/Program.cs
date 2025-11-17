@@ -17,6 +17,8 @@ using Users.Infrastructure.DataBase.EntityFramework.Context;
 using Users.Infrastructure;
 using Users.Infrastructure.DataBase.EntityFramework.Identity.Extension;
 using Users.Infrastructure.Monitoring;
+using Users.Api.Consumers;
+using Users.Application.Rabbit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +62,11 @@ InfraBootstrapper.Register(builder.Services);
 
 #endregion
 
+#region [Consumers]
+builder.Services.AddSingleton<RabbitMqSetup>();
+builder.Services.AddHostedService<UserActiveConsumer>();
+
+#endregion
 var app = builder.Build();
 
 // Log manual para teste

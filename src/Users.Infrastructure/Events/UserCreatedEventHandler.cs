@@ -8,14 +8,15 @@ namespace Users.Infrastructure.Events
 {
     public class UserCreatedEventHandler : IUserCreatedEventHandler
     {
-        public void PublishUserCreatedEvent(UserCreatedEvent user)
+        public void PublishUserCreatedEvent(UserEvent user)
         {
             var factory = new ConnectionFactory() { HostName = "rabbitmq" }; // ou nome do container no docker-compose
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
+            var eventDescription = user.EventType.ToString();
             channel.QueueDeclare(
-                queue: "user-created-queue",
+                queue: $"user_{eventDescription}_queue",
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -32,8 +33,8 @@ namespace Users.Infrastructure.Events
             var body = Encoding.UTF8.GetBytes(message);
 
             channel.BasicPublish(
-                exchange: "",
-                routingKey: "user-created-queue",
+                exchange: $"user_{eventDescription}_exchange",
+                routingKey: $"user_{eventDescription}_queue",
                 basicProperties: null,
                 body: body);
         }
