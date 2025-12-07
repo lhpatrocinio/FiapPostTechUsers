@@ -10,17 +10,11 @@ namespace Users.Infrastructure.Events
     {
         public void PublishUserCreatedEvent(UserEvent user)
         {
-            var factory = new ConnectionFactory() { HostName = "rabbitmq" }; // ou nome do container no docker-compose
+            var factory = new ConnectionFactory() { HostName = "rabbitmq" };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
             var eventDescription = user.EventType.ToString();
-            channel.QueueDeclare(
-                queue: $"user_{eventDescription}_queue",
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
 
             var message = JsonSerializer.Serialize(new
             {
@@ -34,7 +28,7 @@ namespace Users.Infrastructure.Events
 
             channel.BasicPublish(
                 exchange: $"user_{eventDescription}_exchange",
-                routingKey: $"user_{eventDescription}_queue",
+                routingKey: $"user_{eventDescription}_key", 
                 basicProperties: null,
                 body: body);
         }

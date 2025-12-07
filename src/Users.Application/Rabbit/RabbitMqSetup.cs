@@ -16,7 +16,7 @@ namespace Users.Application.Rabbit
         {
             var factory = new ConnectionFactory()
             {
-                HostName = "localhost",
+                HostName = "rabbitmq",
                 UserName = "guest",
                 Password = "guest"
             };
@@ -29,7 +29,7 @@ namespace Users.Application.Rabbit
             var ExchangeMain = $"{eventQueue}_exchange";
             var ExchangeDLX = $"{eventQueue}_dlx";
             var QueueMain = $"{eventQueue}_queue";
-            var QueueRetry = $"{eventQueue}_queue";
+            var QueueRetry = $"{eventQueue}_retry";
             var QueueDLQ = $"{eventQueue}_dlq";
             var RoutingKey = $"{eventQueue}_key";
 

@@ -48,7 +48,7 @@ namespace Users.Api.Consumers
                     await userServices.BlockUserAsync(
                         new BlockUserRequest()
                         {
-                            Id = userEvent.UserId,
+                            Id = userEvent.Id,
                             EnableBlocking = false
                         });
                 }
@@ -71,7 +71,7 @@ namespace Users.Api.Consumers
                 }
             };
 
-            _channel.BasicConsume("user_active-queue", false, consumer);
+            _channel.BasicConsume("user_active_queue", false, consumer);
             return Task.CompletedTask;
         }
 
@@ -119,6 +119,6 @@ namespace Users.Api.Consumers
         }
     }
 
-    public record UserActiveEvent(Guid UserId, string Name, string Email, DateTime CreatedAt);
+    public record UserActiveEvent(Guid Id, string Name, string Email, DateTime CreatedAt);
 }
 

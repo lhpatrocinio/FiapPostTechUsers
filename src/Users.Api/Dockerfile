@@ -1,32 +1,37 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-# Install curl for health checks
+# === RUNTIME BASE ===
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
 USER root
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+RUN apk add --no-cache curl
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# === BUILD & RESTORE (SDK) ===
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Users.Api/Users.Api.csproj", "src/Users.Api/"]
-RUN dotnet restore "./src/Users.Api/Users.Api.csproj"
-COPY . .
-WORKDIR "/src/src/Users.Api"
-RUN dotnet build "./Users.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Copia apenas o csproj para restaurar primeiro
+COPY ["src/Users.Api/Users.Api.csproj", "src/Users.Api/"]
+
+RUN dotnet restore "src/Users.Api/Users.Api.csproj"
+
+# Copia o resto do código
+COPY . .
+
+WORKDIR "/src/src/Users.Api"
+
+RUN dotnet build "Users.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# === PUBLISH (SDK) ===
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Users.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Users.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# === FINAL RUNTIME IMAGE ===
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
