@@ -32,6 +32,28 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Test", "tests\Users.Test\Users.Test.csproj", "{7F63B1B7-4BBD-415F-805C-BDFDFC15C072}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", "{A8081225-D26B-42D4-A87A-30689BB1A142}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Local", "Local", "{C1662625-A960-47EF-86FB-89AD277B0712}"
+	ProjectSection(SolutionItems) = preProject
+		Kubernetes\Local\mssql-deployment.yaml = Kubernetes\Local\mssql-deployment.yaml
+		Kubernetes\Local\mssql-pvc.yaml = Kubernetes\Local\mssql-pvc.yaml
+		Kubernetes\Local\mssql-service.yaml = Kubernetes\Local\mssql-service.yaml
+		Kubernetes\Local\pod.yaml = Kubernetes\Local\pod.yaml
+		Kubernetes\Local\rabbitmq-deployment.yaml = Kubernetes\Local\rabbitmq-deployment.yaml
+		Kubernetes\Local\rabbitmq-service.yaml = Kubernetes\Local\rabbitmq-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuvem", "Nuvem", "{7BE4D33E-240A-408E-A9C6-571F375C9C57}"
+	ProjectSection(SolutionItems) = preProject
+		Kubernetes\Nuvem\configmap.yaml = Kubernetes\Nuvem\configmap.yaml
+		Kubernetes\Nuvem\deployment.yaml = Kubernetes\Nuvem\deployment.yaml
+		Kubernetes\Nuvem\hpa.yaml = Kubernetes\Nuvem\hpa.yaml
+		Kubernetes\Nuvem\namespace.yaml = Kubernetes\Nuvem\namespace.yaml
+		Kubernetes\Nuvem\secret.yaml = Kubernetes\Nuvem\secret.yaml
+		Kubernetes\Nuvem\service.yaml = Kubernetes\Nuvem\service.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +98,9 @@ Global
 		{A9ED9407-5E83-43C8-880C-DAC1FA6587BD} = {2AB7A086-66EB-42AA-B2BC-91E456844F2F}
 		{719CA104-24A2-458D-8EF7-96059B968ECC} = {2AB7A086-66EB-42AA-B2BC-91E456844F2F}
 		{7F63B1B7-4BBD-415F-805C-BDFDFC15C072} = {5E0D739E-3E5D-470C-BCFD-08AB89E77D80}
+		{A8081225-D26B-42D4-A87A-30689BB1A142} = {C80C4DA7-0AA5-4403-A0F6-D89025EC48C8}
+		{C1662625-A960-47EF-86FB-89AD277B0712} = {A8081225-D26B-42D4-A87A-30689BB1A142}
+		{7BE4D33E-240A-408E-A9C6-571F375C9C57} = {A8081225-D26B-42D4-A87A-30689BB1A142}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F824118A-B7F3-4754-B075-6007F2043CCC}

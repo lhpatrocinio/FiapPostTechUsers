@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: usersapipod
+  labels:
+    app: usersapipod
+spec:
+  containers:
+  - name: usersapipod
+    image: 050119872204201412061989/usersapiposteach
+    env:
+        - name: ConnectionStrings__DefaultConnection
+          value: "Server= 192.168.0.26,1433;Database=pos_tech_users;User=sa;Password=huaHhbSyjn9bttt;TrustServerCertificate=true;MultipleActiveResultSets=true"        
+    ports:
+    - containerPort: 80

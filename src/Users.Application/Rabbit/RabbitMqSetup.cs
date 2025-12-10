@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using Microsoft.Extensions.Configuration;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,13 @@ namespace Users.Application.Rabbit
         private readonly IConnection _connection;
         private readonly IModel _channel;
 
-        public RabbitMqSetup()
+        public RabbitMqSetup(IConfiguration config)
         {
             var factory = new ConnectionFactory()
             {
-                HostName = "rabbitmq",
-                UserName = "guest",
-                Password = "guest"
+                HostName = config["RabbitMQ:Host"],
+                UserName = config["RabbitMQ:Username"],
+                Password = config["RabbitMQ:Password"]
             };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
