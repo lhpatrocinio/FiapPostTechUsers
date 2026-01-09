@@ -47,11 +47,31 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuvem", "Nuvem", "{7BE4D33E-240A-408E-A9C6-571F375C9C57}"
 	ProjectSection(SolutionItems) = preProject
 		Kubernetes\Nuvem\configmap.yaml = Kubernetes\Nuvem\configmap.yaml
-		Kubernetes\Nuvem\deployment.yaml = Kubernetes\Nuvem\deployment.yaml
-		Kubernetes\Nuvem\hpa.yaml = Kubernetes\Nuvem\hpa.yaml
 		Kubernetes\Nuvem\namespace.yaml = Kubernetes\Nuvem\namespace.yaml
-		Kubernetes\Nuvem\secret.yaml = Kubernetes\Nuvem\secret.yaml
-		Kubernetes\Nuvem\service.yaml = Kubernetes\Nuvem\service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{EA6CF33B-6A45-45AF-B2E6-987B752EE410}"
+	ProjectSection(SolutionItems) = preProject
+		Kubernetes\Nuvem\deployment-api.yaml = Kubernetes\Nuvem\deployment-api.yaml
+		Kubernetes\Nuvem\hpa-api.yaml = Kubernetes\Nuvem\hpa-api.yaml
+		Kubernetes\Nuvem\secret-api.yaml = Kubernetes\Nuvem\secret-api.yaml
+		Kubernetes\Nuvem\services-api.yaml = Kubernetes\Nuvem\services-api.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rabbit", "Rabbit", "{75FA7501-F571-4EA2-8430-9159B82DF45C}"
+	ProjectSection(SolutionItems) = preProject
+		Kubernetes\Nuvem\deployment-rabbit.yaml = Kubernetes\Nuvem\deployment-rabbit.yaml
+		Kubernetes\Nuvem\pvc-rabbit.yaml = Kubernetes\Nuvem\pvc-rabbit.yaml
+		Kubernetes\Nuvem\secret-rabbitmq.yaml = Kubernetes\Nuvem\secret-rabbitmq.yaml
+		Kubernetes\Nuvem\services-rabbit.yaml = Kubernetes\Nuvem\services-rabbit.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mssql", "Mssql", "{2A0061C9-208A-4075-A8A9-A9C2FECC65A1}"
+	ProjectSection(SolutionItems) = preProject
+		Kubernetes\Nuvem\deployment-mssql.yaml = Kubernetes\Nuvem\deployment-mssql.yaml
+		Kubernetes\Nuvem\pvc-mssql.yaml = Kubernetes\Nuvem\pvc-mssql.yaml
+		Kubernetes\Nuvem\secret-db.yaml = Kubernetes\Nuvem\secret-db.yaml
+		Kubernetes\Nuvem\services-mssql.yaml = Kubernetes\Nuvem\services-mssql.yaml
 	EndProjectSection
 EndProject
 Global
@@ -101,6 +121,9 @@ Global
 		{A8081225-D26B-42D4-A87A-30689BB1A142} = {C80C4DA7-0AA5-4403-A0F6-D89025EC48C8}
 		{C1662625-A960-47EF-86FB-89AD277B0712} = {A8081225-D26B-42D4-A87A-30689BB1A142}
 		{7BE4D33E-240A-408E-A9C6-571F375C9C57} = {A8081225-D26B-42D4-A87A-30689BB1A142}
+		{EA6CF33B-6A45-45AF-B2E6-987B752EE410} = {7BE4D33E-240A-408E-A9C6-571F375C9C57}
+		{75FA7501-F571-4EA2-8430-9159B82DF45C} = {7BE4D33E-240A-408E-A9C6-571F375C9C57}
+		{2A0061C9-208A-4075-A8A9-A9C2FECC65A1} = {7BE4D33E-240A-408E-A9C6-571F375C9C57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F824118A-B7F3-4754-B075-6007F2043CCC}

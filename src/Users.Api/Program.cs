@@ -33,6 +33,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentityExtension();
 builder.Services.AddAuthorizationExtension(builder.Configuration);
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
 // Adiciona configuração CORS para permitir solicitações do Prometheus
 builder.Services.AddCors(options =>

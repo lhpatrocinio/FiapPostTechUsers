@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+  namespace: app-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+    spec:
+      containers:
+        - name: webapi
+          image: acrinfiniteloops.azurecr.io/webapi:1.0
+          resources:
+            requests:
+              cpu: "200m"        # 0.2 vCPU
+              memory: "256Mi"    # 256 MB
+            limits:
+              cpu: "500m"        # 0.5 vCPU
+              memory: "512Mi"    # 512 MB
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://0.0.0.0:8080"
+
+            - name: Kestrel__Endpoints__Http__Url
+              value: "http://0.0.0.0:8080"
+
+            - name: DOTNET_URLS
+              value: "http://0.0.0.0:8080"
+
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: ASPNETCORE_ENVIRONMENT
+        
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: secret-api
+                  key: ConnectionStrings__DefaultConnection
+
+            - name: RabbitMq__Host
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: RabbitMq__Host
+
+            - name: RabbitMq__Port
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: RabbitMq__Port
+
+            - name: RabbitMq__VirtualHost
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: RabbitMq__VirtualHost
+
+            - name: RabbitMq__User
+              valueFrom:
+                secretKeyRef:
+                  name: secret-api
+                  key: RabbitMq__User
+
+            - name: RabbitMq__Password
+              valueFrom:
+                secretKeyRef:
+                  name: secret-api
+                  key: RabbitMq__Password
