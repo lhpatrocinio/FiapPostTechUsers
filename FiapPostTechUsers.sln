@@ -74,6 +74,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mssql", "Mssql", "{2A0061C9
 		Kubernetes\Nuvem\services-mssql.yaml = Kubernetes\Nuvem\services-mssql.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{AD5AB1AD-B9E3-4DF8-A679-4108EF4D8439}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Fluxo de comunicação assíncrona dos microsserviços.JPG = Docs\Fluxo de comunicação assíncrona dos microsserviços.JPG
+		Docs\Kubernetes.JPG = Docs\Kubernetes.JPG
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
